@@ -1,7 +1,8 @@
 package ar.utn.ecommerce;
 
-import ar.utn.ecommerce.repository.ProductoRepository;
-import ar.utn.ecommerce.models.Producto;
+import ar.utn.ecommerce.models.Productos.ProductoBase;
+import ar.utn.ecommerce.models.Productos.SectorPersonalizacion;
+import ar.utn.ecommerce.repository.ProductoBaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +11,24 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import static ar.utn.ecommerce.models.Productos.Categoria.REMERA;
+
 
 @SpringBootApplication
 public class ECommerceApplication {
 
+
+
+
 	private static Logger LOG = LoggerFactory.getLogger(ECommerceApplication.class);
 
 	@Autowired
-	ProductoRepository repositorioProducto;
+	ProductoBaseRepository ProductoBaseRepository;
 
 
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceApplication.class, args);
+
 
 	}
 	@Bean
@@ -30,11 +37,8 @@ public class ECommerceApplication {
 		return (args) -> {
 			System.out.print(args);
 
-			repositorioProducto.save(new Producto("Camisa cuello", "linkFoto","Camisa basica",50.00,10,"Amssy","Disponible","ropa"));
-			repositorioProducto.save(new Producto("Camisa manga", "linkFoto","Camisa basica con manga",200.00,3,"Robert","Disponible","ropa"));
-
-			System.out.print(" cantidad de productos : " + repositorioProducto.count());
-			System.out.print(repositorioProducto.findAll());
+			System.out.print(" cantidad de productos : " + ProductoBaseRepository.count());
+			System.out.print(ProductoBaseRepository.findAll());
 		};
 	}
 }
