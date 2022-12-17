@@ -22,14 +22,12 @@ public class ProductoPersonalizado {
     @Column( name = "nombre")
     private String nombre;
 
-    @Column( name = "link_foto")
-    private String link_foto;
+    @Column( name = "foto")
+    private String foto;
 
     @ManyToOne
     @JoinColumn(name = "productoBaseReferenciado", referencedColumnName = "ID")
     private ProductoBase productoBaseReferenciado;
-
-    private Integer productoBaseReferenciadoID;
 
     @Column( name = "descripcion")
     private String descripcion;
@@ -43,26 +41,29 @@ public class ProductoPersonalizado {
 
     @Column( name = "tiempo_fabricacion")
     private Integer tiempo_fabricacion;
+    /*
     @Transient
-    @ManyToOne
-    @JoinColumn(name = "creador" , referencedColumnName = "ID")
-    private Vendedor creador;
+    @Column(name = "vendedor")
+    private String vendedor;
+    */
+
     @Enumerated(EnumType.STRING)
     @Column( name = "categoria")
     private Categoria categoria;
+    @Transient
+    @OneToMany(mappedBy = "producto",cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
+    private List<Personalizacion> personalizaciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productoPersonalizado", cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
-    private List<Personalizacion> personalizacion = new ArrayList<>();
 
-
-    public ProductoPersonalizado(String nombre, ProductoBase productoBaseReferenciado /*,Vendedor creador*/) {
+    public ProductoPersonalizado(String nombre, ProductoBase productoBaseReferenciado /*,Vendedor vendedor*/) {
         this.nombre = nombre;
         this.productoBaseReferenciado = productoBaseReferenciado;
-        this.link_foto = productoBaseReferenciado.getLink_foto();
+        this.foto = productoBaseReferenciado.getFoto();
         this.descripcion = productoBaseReferenciado.getDescripcion();
         this.precio =  productoBaseReferenciado.getPrecio_base();
         this.categoria = productoBaseReferenciado.getCategoria();
-       // this.creador = creador;
+        this.tiempo_fabricacion = productoBaseReferenciado.getTiempo_fabricacion();
+        //this.vendedor = vendedor.getNombre();
     }
 
 
@@ -71,11 +72,8 @@ public class ProductoPersonalizado {
     }
 
     public void addPersonalizacion(Personalizacion personalizacion){
-        this.personalizacion.add(personalizacion);
-        personalizacion.setProductoPersonalizado(this);
+        this.personalizaciones.add(personalizacion);
+        personalizacion.setProducto(this);
     }
-
-
-
 
 }

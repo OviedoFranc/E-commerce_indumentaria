@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.utn.ecommerce.models.Productos.EstadoProducto.CANCELADO;
 import static ar.utn.ecommerce.models.Productos.EstadoProducto.DISPONIBLE;
@@ -26,8 +27,8 @@ public class ProductoBase{
     private String nombre;
 
     @NotNull
-    @Column( name = "link_foto")
-    private String link_foto;
+    @Column( name = "foto")
+    private String foto;
 
     @Column( name = "descripcion")
     private String descripcion;
@@ -53,16 +54,16 @@ public class ProductoBase{
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "ProductoID" , referencedColumnName = "ID")
-    private List<SectorPersonalizacion> sectoresPersonalizacionDisponibles = new ArrayList<SectorPersonalizacion>();;
+    private List<SectorPersonalizacion> sectoresPersonalizacionDisponibles = new ArrayList<>();
 
 
     public ProductoBase() {
 
     }
 
-    public ProductoBase(String nombre, String link_foto, String descripcion, Double precio_base, Integer tiempo_fabricacion, Categoria categoria) {
+    public ProductoBase(String nombre, String foto, String descripcion, Double precio_base, Integer tiempo_fabricacion, Categoria categoria) {
         this.nombre = nombre;
-        this.link_foto = link_foto;
+        this.foto = foto;
         this.descripcion = descripcion;
         this.precio_base = precio_base;
         this.tiempo_fabricacion = tiempo_fabricacion;
@@ -73,5 +74,12 @@ public class ProductoBase{
     }
     public void addSectorPersonalizacion (SectorPersonalizacion nuevoSector){
         this.sectoresPersonalizacionDisponibles.add(nuevoSector);
+    }
+    public SectorPersonalizacion getSectorPersonalizacion (Integer sectorID){
+        SectorPersonalizacion sector = this.sectoresPersonalizacionDisponibles.stream()
+                .filter(p -> p.getSectorID() == sectorID)
+                .findFirst()
+                .orElse(null);
+        return sector;
     }
 }

@@ -1,4 +1,4 @@
-package ar.utn.ecommerce.controllers;
+package ar.utn.ecommerce.Controlador;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

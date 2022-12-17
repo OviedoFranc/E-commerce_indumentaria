@@ -21,15 +21,12 @@ public class Personalizacion {
     private Integer precio;
 
     @ManyToOne
-    @JoinColumn(name = "productoPersonalizado", referencedColumnName = "ID")
-    private ProductoPersonalizado productoPersonalizado;
+    private ProductoPersonalizado producto;
 
     @Column(name = "personalizacion_sector")
     private String sectorPersonalizacion;
 
     @Column(name = "personalizacion_tipo")
     private String tipoPersonalizacion;
-
-
 
 }

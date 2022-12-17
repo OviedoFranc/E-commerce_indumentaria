@@ -19,7 +19,7 @@ public class SectorPersonalizacion {
     @ElementCollection
     @CollectionTable(name = "tipoPersonalizacion" ,joinColumns = @JoinColumn(name = "sectorID" ))
     @Column(name = "TipoPersonalizacion")
-    private List<String> posiblesTipoPersonalizacion = new ArrayList<String>();
+    private List<String> posiblesTipoPersonalizacion = new ArrayList<>();
 
     public SectorPersonalizacion(String sectorPersonalizacion) {
         this.sectorPersonalizacion = sectorPersonalizacion;

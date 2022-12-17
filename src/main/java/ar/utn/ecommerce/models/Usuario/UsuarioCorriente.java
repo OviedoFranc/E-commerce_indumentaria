@@ -1,7 +1,6 @@
 package ar.utn.ecommerce.models.Usuario;
 
 import ar.utn.ecommerce.models.Carrito.CarritoCompra;
-import ar.utn.ecommerce.models.Productos.ProductoPersonalizado;
 import lombok.Getter;
 import lombok.Setter;
 

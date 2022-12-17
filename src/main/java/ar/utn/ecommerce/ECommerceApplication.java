@@ -1,17 +1,14 @@
 package ar.utn.ecommerce;
 
-import ar.utn.ecommerce.models.Productos.ProductoBase;
-import ar.utn.ecommerce.models.Productos.SectorPersonalizacion;
-import ar.utn.ecommerce.repository.ProductoBaseRepository;
+import ar.utn.ecommerce.Repositorio.ProductoBaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-import static ar.utn.ecommerce.models.Productos.Categoria.REMERA;
+import org.springframework.context.annotation.Bean;
 
 
 @SpringBootApplication

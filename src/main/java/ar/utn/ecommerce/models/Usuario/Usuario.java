@@ -3,7 +3,6 @@ package ar.utn.ecommerce.models.Usuario;
 import lombok.Getter;
 
 import javax.persistence.*;
-
 @Entity
 @Getter
 @Table(name ="Usuario")
@@ -27,12 +26,11 @@ public class Usuario {
     private TipoCuenta tipoDeCuenta;
 
     public Usuario(String nombre, String email, String password, TipoCuenta tipoDeCuenta) {
-        Nombre = nombre;
+        this.Nombre = nombre;
         this.email = email;
-        Password = password;
+        this.Password = password;
         this.tipoDeCuenta = tipoDeCuenta;
     }
-
     public Usuario() {
 
     }
