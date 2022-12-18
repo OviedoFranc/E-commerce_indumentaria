@@ -2,6 +2,7 @@ package ar.utn.ecommerce.models.DTO;
 
 import ar.utn.ecommerce.models.Productos.EstadoProducto;
 import ar.utn.ecommerce.models.Productos.ProductoPersonalizado;
+import ar.utn.ecommerce.models.Usuario.Vendedor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.rest.core.config.Projection;
@@ -16,7 +17,7 @@ public interface DTOProdPersoResume {
         String getDescripcion();
         EstadoProducto getEstadoProducto();
         //String getCategoria();
-      //  String getCreador().getNombre();
+        //Vendedor getCreador();
 
 
     /*

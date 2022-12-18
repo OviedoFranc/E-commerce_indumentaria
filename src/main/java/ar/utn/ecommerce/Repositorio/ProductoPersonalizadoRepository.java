@@ -20,6 +20,6 @@ public interface ProductoPersonalizadoRepository extends JpaRepository<ProductoP
 
     Page <List<DTOProdPersoResume>> findAllByEstadoProducto(EstadoProducto estado, Pageable pageable);
     //List<ProductoPersonalizado> findByCategoria(Categoria categoria);
-    //List<ProductoPersonalizado> findByVendedor(Vendedor vendedor);
+    List<ProductoPersonalizado> findByCreador(String creador);
 
 }

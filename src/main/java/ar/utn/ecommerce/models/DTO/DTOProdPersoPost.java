@@ -11,11 +11,11 @@ public class DTOProdPersoPost {
 
     String nombreProductoPersonalizado;
     Integer productoReferenciadoId;
-   // Integer vendedorReferenciadoId;
+    Integer vendedorReferenciadoId;
 
-    public DTOProdPersoPost(String nombreProductoPersonalizado, Integer productoReferenciadoId/*, Integer vendedorReferenciadoId*/) {
+    public DTOProdPersoPost(String nombreProductoPersonalizado, Integer productoReferenciadoId, Integer vendedorReferenciadoId) {
         this.nombreProductoPersonalizado = nombreProductoPersonalizado;
         this.productoReferenciadoId = productoReferenciadoId;
-        //this.vendedorReferenciadoId = vendedorReferenciadoId;
+        this.vendedorReferenciadoId = vendedorReferenciadoId;
     }
 }

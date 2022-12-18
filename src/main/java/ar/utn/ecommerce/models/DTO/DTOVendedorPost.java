@@ -25,13 +25,7 @@ public class DTOVendedorPost {
         this.descripcion =  descripcion;
         this.medioDePagoAceptado = mediosDePago;
     }
-/*
-    public DTOVendedorPost(String nombre, String email, String password, String descripcionVendedor) {
-        this.nombre = nombre;
-        this.email = email;
-        this.password = password;
-        this.descripcionVendedor =  descripcionVendedor;
-    }*/
+
 }
 
 

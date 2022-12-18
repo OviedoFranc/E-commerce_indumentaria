@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ar.utn.ecommerce.models.Productos.EstadoProducto.*;
 
@@ -41,21 +42,20 @@ public class ProductoPersonalizado {
 
     @Column( name = "tiempo_fabricacion")
     private Integer tiempo_fabricacion;
-    /*
-    @Transient
-    @Column(name = "vendedor")
-    private String vendedor;
-    */
+
+    @Column( name = "creador")
+    private String creador;
+
 
     @Enumerated(EnumType.STRING)
     @Column( name = "categoria")
     private Categoria categoria;
-    @Transient
-    @OneToMany(mappedBy = "producto",cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
+
+    @OneToMany(mappedBy = "producto", cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
     private List<Personalizacion> personalizaciones = new ArrayList<>();
 
 
-    public ProductoPersonalizado(String nombre, ProductoBase productoBaseReferenciado /*,Vendedor vendedor*/) {
+    public ProductoPersonalizado(String nombre, ProductoBase productoBaseReferenciado ,Vendedor vendedor) {
         this.nombre = nombre;
         this.productoBaseReferenciado = productoBaseReferenciado;
         this.foto = productoBaseReferenciado.getFoto();
@@ -63,7 +63,7 @@ public class ProductoPersonalizado {
         this.precio =  productoBaseReferenciado.getPrecio_base();
         this.categoria = productoBaseReferenciado.getCategoria();
         this.tiempo_fabricacion = productoBaseReferenciado.getTiempo_fabricacion();
-        //this.vendedor = vendedor.getNombre();
+        vendedor.addProductoPersonalizado(this);
     }
 
 
@@ -71,9 +71,23 @@ public class ProductoPersonalizado {
 
     }
 
+    public void darDeBajaProducto(){
+        this.estadoProducto = CANCELADO;
+    }
+
+    public void pausarProducto(){
+        this.estadoProducto = PAUSADO;
+    }
+
     public void addPersonalizacion(Personalizacion personalizacion){
         this.personalizaciones.add(personalizacion);
         personalizacion.setProducto(this);
+    }
+
+    public void deletePersonalizacion(Integer personalizacionId){
+        this.setPersonalizaciones( this.personalizaciones.stream()
+                .filter(i -> i.getId() != personalizacionId)
+                .collect(Collectors.toList()));
     }
 
 }

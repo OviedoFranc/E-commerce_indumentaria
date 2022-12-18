@@ -15,7 +15,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.DISPONIBLE;
 
 @RestController
 @CrossOrigin
@@ -30,39 +29,39 @@ public class VendedorController {
         public List<Vendedor> vendedoresPosibles(){
             return repositorioVendedor.findAll();
         }
+    @GetMapping(path = {"/{vendedor}/productoPersonalizado"} )
+        public List<ProductoPersonalizado> productosPersonalizadosDeVendedor(@PathVariable Integer vendedor){
+
+        Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(vendedor);
+        return repositorioProductoPersonalizado.findByCreador(vendedorTraido.get().getNombre());
+
+        }
 
         @GetMapping(path = {"/vendedor/{Id}"} )
-        public ResponseEntity<Vendedor> vendedor(@PathVariable Integer Id){
+        public ResponseEntity<Vendedor> obtenerVendedor(@PathVariable Integer Id){
             Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(Id) ;
             if (vendedorTraido.isEmpty()){
-                return ResponseEntity.notFound().build(); // Solo me da un 404
+                return ResponseEntity.notFound().build();
             }
             return new ResponseEntity<>(vendedorTraido.get(), HttpStatus.OK);
         }
-/*
-        @GetMapping(path = {"/vendedor/{Id}/productoPersonalizado"} )
-        public ResponseEntity< List<ProductoPersonalizado> > productosDelVendedor(@PathVariable Integer Id){
-        Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(Id) ;
-        if (vendedorTraido.isEmpty()){
-            return ResponseEntity.notFound().build(); // Solo me da un 404
-        }
-        else {
-            List<ProductoPersonalizado> productosDelVendedor =  repositorioProductoPersonalizado.findByCreador(vendedorTraido.get());
-            return new ResponseEntity<>(repositorioProductoPersonalizado.findAllByVendedorId(Id), HttpStatus.OK);
-        }
-    }
-*/
+
         @PostMapping(path = {"/vendedor"} )
         public Vendedor agregarVendedor(@RequestBody @Valid DTOVendedorPost vendedor){
-            if(vendedor.getLink_fotoUsuario().equals(""))
-            {
-                Vendedor vendedorNuevoSinFoto = new Vendedor(vendedor.getNombre(), vendedor.getEmail(), vendedor.getPassword(), "fotoBasicaFalsa.jpg", vendedor.getDescripcion(),vendedor.getMedioDePagoAceptado());
-                return repositorioVendedor.save(vendedorNuevoSinFoto);
+
+            Vendedor vendedorNuevo = new Vendedor(vendedor.getNombre(), vendedor.getEmail(), vendedor.getPassword(), vendedor.getLink_fotoUsuario(),vendedor.getDescripcion(),vendedor.getMedioDePagoAceptado());
+            return repositorioVendedor.save(vendedorNuevo);
+
+        }
+
+    @DeleteMapping(path = {"/vendedor/{Id}"} )
+    public void eliminarVendedorYproductosPersonalizados(@PathVariable Integer Id){
+            Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(Id);
+            if(!vendedorTraido.isEmpty()) {
+                vendedorTraido.get().darDeBaja();
+                repositorioVendedor.save(vendedorTraido.get());
             }
-            else {
-                Vendedor vendedorNuevo = new Vendedor(vendedor.getNombre(), vendedor.getEmail(), vendedor.getPassword(), vendedor.getLink_fotoUsuario(),vendedor.getDescripcion(),vendedor.getMedioDePagoAceptado());
-                return repositorioVendedor.save(vendedorNuevo);
-            }
+            else throw new IllegalStateException("Error vendedor no existe");
         }
 
 }

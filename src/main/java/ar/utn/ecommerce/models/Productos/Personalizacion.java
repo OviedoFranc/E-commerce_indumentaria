@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Personalizacion {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long Id;
+    private Integer Id;
 
     @Column(name = "nombrePersonalizacion")
     private String nombre;
@@ -21,6 +21,7 @@ public class Personalizacion {
     private Integer precio;
 
     @ManyToOne
+    @JoinColumn(name = "productoPersoReferenciado", referencedColumnName = "ID")
     private ProductoPersonalizado producto;
 
     @Column(name = "personalizacion_sector")

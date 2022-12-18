@@ -64,10 +64,10 @@ public class ProductoBaseController {
           }
           else  repositorioProducto.save(ProductoBase);
      }
-                                                                                                    //TODO: PROBAR
+
      @Transactional
      @PostMapping(path = {"/productoBase/{id}/seccion"} )
-     public void agregarSeccion(@RequestBody @Valid SectorPersonalizacion SectorPersonalizacion,@PathVariable Integer id , BindingResult bindingResult){
+     public void agregarSeccionProductoBase(@RequestBody @Valid SectorPersonalizacion SectorPersonalizacion,@PathVariable Integer id , BindingResult bindingResult){
           Optional<ProductoBase> producto = repositorioProducto.findById(id);
           if (bindingResult.hasErrors()){
                throw new IllegalStateException("Error en los datos de la seccion del producto cargado");
@@ -82,42 +82,34 @@ public class ProductoBaseController {
                repositorioProducto.save(productoReferenciado);
           }
      }
-     @Transactional
-     @PostMapping(path = {"/productoBase/{id}/{seccionId}/tipoPersonalizacion"} )// Comprobar si el ID existe  // control de errores si esta vacio
-     public void agregarTipoPersonalizacion(@RequestBody @Valid String tipoPersonalizacion, @PathVariable Integer id, @PathVariable Integer seccionId,BindingResult bindingResult){
-          Optional<ProductoBase> producto = repositorioProducto.findById(id);
-          if (bindingResult.hasErrors()){
-               throw new IllegalStateException("Error en los datos del tipo de personalizacion cargado");
-          }
 
-          else if (producto.isEmpty() ){
-               throw new IllegalStateException("El producto referenciado no existe");
-          }
-          else if(  producto.get().getSectorPersonalizacion(seccionId).equals(null) ){
-               throw new IllegalStateException("El producto referenciado no posee esa seccion");
+     @Transactional
+     @DeleteMapping(path = {"/productoBase/{id}"} )
+     public ResponseEntity eliminarProductoBase(@PathVariable Integer id){
+          Optional<ProductoBase> producto = repositorioProducto.findById(id);
+          if (producto.isEmpty()){
+               throw new IllegalStateException("Error el producto no existe para eliminarlo");
           }
           else {
-               SectorPersonalizacion sector = producto.get().getSectorPersonalizacion(seccionId);
-               sector.addposiblesTipoPersonalizacion(tipoPersonalizacion);
-               repositorioProducto.save(producto.get());   //TODO: REVISAR SI GUARDO EL PRODUCTO O GUARDO EL SECTOR
+                    producto.get().darDeBajaProducto();
+                    repositorioProducto.save(producto.get());
+                    return new ResponseEntity<>(producto.get(), HttpStatus.OK);
           }
      }
-     // TODO: LOS DELETE
      @Transactional
-     @DeleteMapping(path = {"/productoBase"} )
-     public ResponseEntity eliminarProducto(@RequestBody @Valid ProductoBase productoEliminar, BindingResult bindingResult){
-          if (bindingResult.hasErrors()){
-               throw new IllegalStateException("Error en los datos del tipo de personalizacion cargado");
+     @DeleteMapping(path = {"/productoBase/{id}/{seccion}"} )
+     public ResponseEntity eliminarSeccionProductoBase(@PathVariable Integer id,@PathVariable Integer seccion){
+          Optional<ProductoBase> producto = repositorioProducto.findById(id);
+          if (producto.isEmpty()){
+               throw new IllegalStateException("Error el producto no existe para eliminarlo");
+          }
+          else if (producto.get().getSectorPersonalizacion(seccion).equals(null)){
+               throw new IllegalStateException("Error la seccion del producto no existe para eliminarlo");
           }
           else {
-               Optional<ProductoBase> producto = repositorioProducto.findById(productoEliminar.getID());
-               if (producto.isEmpty()){
-                    return ResponseEntity.notFound().build(); // Solo me da un 404
-               }
-               else {
-                    producto.get().setEstadoProducto(CANCELADO);
-                    return new ResponseEntity<>(producto.get(), HttpStatus.OK);
-               }
+               producto.get().deleteSectorPersonalizacion(seccion);
+               repositorioProducto.save( producto.get());
+               return new ResponseEntity<>(HttpStatus.OK);
           }
      }
 

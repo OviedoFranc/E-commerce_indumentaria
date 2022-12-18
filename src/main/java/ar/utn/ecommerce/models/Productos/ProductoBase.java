@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static ar.utn.ecommerce.models.Productos.EstadoProducto.CANCELADO;
 import static ar.utn.ecommerce.models.Productos.EstadoProducto.DISPONIBLE;
@@ -69,17 +70,31 @@ public class ProductoBase{
         this.tiempo_fabricacion = tiempo_fabricacion;
         this.categoria = categoria;
     }
-    public void darDeBaja (){
+    public void darDeBajaProducto(){
         this.estadoProducto = CANCELADO;
     }
+
     public void addSectorPersonalizacion (SectorPersonalizacion nuevoSector){
         this.sectoresPersonalizacionDisponibles.add(nuevoSector);
     }
+
+    public Boolean poseeSectorPersonalizacion (String sector){
+        return this.sectoresPersonalizacionDisponibles.stream()
+                    .anyMatch(p -> p.getSectorPersonalizacion() == sector);
+    }
+
     public SectorPersonalizacion getSectorPersonalizacion (Integer sectorID){
         SectorPersonalizacion sector = this.sectoresPersonalizacionDisponibles.stream()
                 .filter(p -> p.getSectorID() == sectorID)
                 .findFirst()
                 .orElse(null);
         return sector;
+    }
+
+    public void deleteSectorPersonalizacion(Integer sectorID) {
+        List<SectorPersonalizacion> listaFiltrada = this.sectoresPersonalizacionDisponibles.stream()
+                .filter(p -> p.getSectorID() != sectorID)
+                .collect(Collectors.toList());
+        this.setSectoresPersonalizacionDisponibles(listaFiltrada);
     }
 }
