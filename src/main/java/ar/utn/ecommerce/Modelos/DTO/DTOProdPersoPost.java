@@ -1,8 +1,7 @@
-package ar.utn.ecommerce.models.DTO;
+package ar.utn.ecommerce.Modelos.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.rest.core.config.Projection;
 
 @Getter
 @Setter

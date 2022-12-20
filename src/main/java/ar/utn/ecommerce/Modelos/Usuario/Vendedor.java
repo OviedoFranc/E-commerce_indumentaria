@@ -1,7 +1,7 @@
-package ar.utn.ecommerce.models.Usuario;
+package ar.utn.ecommerce.Modelos.Usuario;
 
 
-import ar.utn.ecommerce.models.Productos.ProductoPersonalizado;
+import ar.utn.ecommerce.Modelos.Productos.ProductoPersonalizado;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ar.utn.ecommerce.models.Usuario.EstadoCuenta.*;
+import static ar.utn.ecommerce.Modelos.Usuario.EstadoCuenta.*;
 
 @Entity
 @Getter @Setter
@@ -30,7 +30,7 @@ public class Vendedor extends Usuario{
     private String link_fotoUsuario = "";
 
     @OneToMany (mappedBy = "creador")
-    List<ProductoPersonalizado> productosPersonalizados;
+    List<ProductoPersonalizado> productosPersonalizados = new ArrayList<>();
 
 
 
@@ -62,4 +62,15 @@ public class Vendedor extends Usuario{
         productoPersonalizado.setCreador(this.getNombre());
     }
 
+    @Override
+    public String toString() {
+        return "Vendedor{" +
+                "Id= "+ this.getID()+
+                " estado=" + estado +
+                ", medioDePagoAceptado=" + medioDePagoAceptado +
+                ", descripcion='" + descripcion + '\'' +
+                ", link_fotoUsuario='" + link_fotoUsuario + '\'' +
+                ", productosPersonalizados=" + productosPersonalizados +
+                '}';
+    }
 }

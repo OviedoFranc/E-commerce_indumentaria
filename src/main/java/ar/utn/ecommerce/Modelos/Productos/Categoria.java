@@ -1,4 +1,4 @@
-package ar.utn.ecommerce.models.Productos;
+package ar.utn.ecommerce.Modelos.Productos;
 
 public enum Categoria {
     ABRIGO,

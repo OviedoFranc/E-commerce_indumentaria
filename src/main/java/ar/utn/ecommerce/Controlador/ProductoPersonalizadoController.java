@@ -1,12 +1,12 @@
 package ar.utn.ecommerce.Controlador;
 
-import ar.utn.ecommerce.models.DTO.DTOProdPersoResume;
-import ar.utn.ecommerce.models.Productos.Personalizacion;
-import ar.utn.ecommerce.models.Productos.ProductoBase;
-import ar.utn.ecommerce.models.Productos.ProductoPersonalizado;
-import ar.utn.ecommerce.models.DTO.DTOProdPersoPost;
-import ar.utn.ecommerce.models.Productos.SectorPersonalizacion;
-import ar.utn.ecommerce.models.Usuario.Vendedor;
+import ar.utn.ecommerce.Modelos.DTO.DTOPersonalizacionPost;
+import ar.utn.ecommerce.Modelos.DTO.DTOProdPersoResume;
+import ar.utn.ecommerce.Modelos.Productos.Personalizacion;
+import ar.utn.ecommerce.Modelos.Productos.ProductoBase;
+import ar.utn.ecommerce.Modelos.Productos.ProductoPersonalizado;
+import ar.utn.ecommerce.Modelos.DTO.DTOProdPersoPost;
+import ar.utn.ecommerce.Modelos.Usuario.Vendedor;
 import ar.utn.ecommerce.Repositorio.ProductoBaseRepository;
 import ar.utn.ecommerce.Repositorio.ProductoPersonalizadoRepository;
 import ar.utn.ecommerce.Repositorio.VendedorRepository;
@@ -22,8 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.CANCELADO;
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.DISPONIBLE;
+import static ar.utn.ecommerce.Modelos.Productos.EstadoProducto.DISPONIBLE;
 
 @RestController
 @CrossOrigin
@@ -76,37 +75,39 @@ public class ProductoPersonalizadoController{
         else if (productoReferenciado.isEmpty() || vendedor.isEmpty()){
                 throw new IllegalStateException("Error el producto/vendedor referenciado no existe");
         }
-        else { ProductoPersonalizado nuevoProdPersonalizado = new ProductoPersonalizado( dtoProdPersoPost.getNombreProductoPersonalizado(),productoReferenciado.get(),vendedor.get());
+        else {
+            ProductoPersonalizado nuevoProdPersonalizado = new ProductoPersonalizado( dtoProdPersoPost.getNombreProductoPersonalizado(),productoReferenciado.get(),vendedor.get());
             repositorioProductoPersonalizado.save(nuevoProdPersonalizado);
         }
 
     }
+
     @Transactional
     @PostMapping(path = {"/productoPersonalizado/{id}/personalizacion"} )
-    public ResponseEntity agregarPersonalizacionProductoPersonalizado(@RequestBody @Valid Personalizacion nuevaPersonalizacion,
+    public ResponseEntity agregarPersonalizacionProductoPersonalizado(@RequestBody @Valid DTOPersonalizacionPost nuevaPersonalizacion,
                                                             BindingResult bindingResult,
                                                             @PathVariable Integer id){
-        Optional<ProductoPersonalizado> ProductoPersonalizado = repositorioProductoPersonalizado.findById(id);
+       Optional<ProductoPersonalizado> productoPersonalizado = repositorioProductoPersonalizado.findById(id);
         if (bindingResult.hasErrors()){
             throw new IllegalStateException("Error en los datos del producto cargado");
         }
-        else if(ProductoPersonalizado.isEmpty()){
+        else if(productoPersonalizado.isEmpty()){
             throw new IllegalStateException("Error el producto no existe");
         }
         else {
-                ProductoBase productoReferenciado = ProductoPersonalizado.get().getProductoBaseReferenciado();
-                List<SectorPersonalizacion> sectoresPersonalizacionPosibles = productoReferenciado.getSectoresPersonalizacionDisponibles();
-                String sectorBuscado = nuevaPersonalizacion.getSectorPersonalizacion();
-                String personalizacionBuscada = nuevaPersonalizacion.getSectorPersonalizacion();
+                ProductoBase productoReferenciado = repositorioProductoBase.findById(productoPersonalizado.get().getProductoBaseReferenciado().getID()).get();
+                Personalizacion personalizacionNueva = new Personalizacion(nuevaPersonalizacion.getNombre(),
+                    nuevaPersonalizacion.getPrecio(),
+                    nuevaPersonalizacion.getSectorPersonalizacion(),
+                    nuevaPersonalizacion.getTipoPersonalizacion());
+
                 if(!productoReferenciado.getEstadoProducto().equals(DISPONIBLE)) { throw new IllegalStateException("Error el producto referenciado no esta disponible");}
-                else if(!productoReferenciado.poseeSectorPersonalizacion(sectorBuscado).equals(null) &&
-                   !sectoresPersonalizacionPosibles.stream().anyMatch( sector -> sector.poseeTipoPersonalizacion( personalizacionBuscada) )
-                   ){
-                    ProductoPersonalizado.get().addPersonalizacion(nuevaPersonalizacion);
-                    repositorioProductoPersonalizado.save(ProductoPersonalizado.get());
+                else {
+
+                    productoPersonalizado.get().addPersonalizacion(personalizacionNueva);
+                    return new ResponseEntity<>(productoPersonalizado.get(), HttpStatus.OK);
                 }
-                else throw new IllegalStateException("Error el producto referenciado no soporta ese sector/tipo personalizacion");
-            return new ResponseEntity<>(ProductoPersonalizado.get(), HttpStatus.OK);
+            //TODO HACER COMPROBACION DE SI POSEE LA SECCION - TIRA ERROR
         }
     }
 

@@ -1,6 +1,6 @@
 package ar.utn.ecommerce.Controlador;
-import ar.utn.ecommerce.models.Productos.ProductoBase;
-import ar.utn.ecommerce.models.Productos.SectorPersonalizacion;
+import ar.utn.ecommerce.Modelos.Productos.ProductoBase;
+import ar.utn.ecommerce.Modelos.Productos.SectorPersonalizacion;
 import ar.utn.ecommerce.Repositorio.ProductoBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.*;
+import static ar.utn.ecommerce.Modelos.Productos.EstadoProducto.*;
 
 
 @RestController
@@ -25,8 +25,8 @@ public class ProductoBaseController {
      ProductoBaseRepository repositorioProducto;
 
      @GetMapping(path = {"/productoBase"} )
-     public ProductoBase productoBaseDisponibles() {
-          return repositorioProducto.findByEstadoProducto(DISPONIBLE);
+     public List<ProductoBase> productoBaseDisponibles() {
+          return repositorioProducto.findAllByEstadoProducto(DISPONIBLE);
      }
 
      @GetMapping(path = {"/productoBase/all"} )
@@ -103,7 +103,7 @@ public class ProductoBaseController {
           if (producto.isEmpty()){
                throw new IllegalStateException("Error el producto no existe para eliminarlo");
           }
-          else if (producto.get().getSectorPersonalizacion(seccion).equals(null)){
+          else if (producto.get().getSectorPersonalizacion(seccion) == null ){
                throw new IllegalStateException("Error la seccion del producto no existe para eliminarlo");
           }
           else {

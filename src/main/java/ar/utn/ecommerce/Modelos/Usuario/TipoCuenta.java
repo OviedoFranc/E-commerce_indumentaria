@@ -1,4 +1,4 @@
-package ar.utn.ecommerce.models.Usuario;
+package ar.utn.ecommerce.Modelos.Usuario;
 
 public enum TipoCuenta {
     VENDEDOR,

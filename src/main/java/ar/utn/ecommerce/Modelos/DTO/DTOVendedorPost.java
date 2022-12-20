@@ -1,10 +1,9 @@
-package ar.utn.ecommerce.models.DTO;
+package ar.utn.ecommerce.Modelos.DTO;
 
-import ar.utn.ecommerce.models.Usuario.MedioPago;
+import ar.utn.ecommerce.Modelos.Usuario.MedioPago;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter

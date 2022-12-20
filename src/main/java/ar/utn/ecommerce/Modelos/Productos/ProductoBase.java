@@ -1,4 +1,4 @@
-package ar.utn.ecommerce.models.Productos;
+package ar.utn.ecommerce.Modelos.Productos;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,11 +9,11 @@ import lombok.Setter;
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.CANCELADO;
-import static ar.utn.ecommerce.models.Productos.EstadoProducto.DISPONIBLE;
+import static ar.utn.ecommerce.Modelos.Productos.EstadoProducto.CANCELADO;
+import static ar.utn.ecommerce.Modelos.Productos.EstadoProducto.DISPONIBLE;
 
 
 @Entity @Getter @Setter
@@ -79,8 +79,9 @@ public class ProductoBase{
     }
 
     public Boolean poseeSectorPersonalizacion (String sector){
+
         return this.sectoresPersonalizacionDisponibles.stream()
-                    .anyMatch(p -> p.getSectorPersonalizacion() == sector);
+                    .anyMatch(p -> p.getSectorPersonalizacion().equals(sector));
     }
 
     public SectorPersonalizacion getSectorPersonalizacion (Integer sectorID){
@@ -96,5 +97,21 @@ public class ProductoBase{
                 .filter(p -> p.getSectorID() != sectorID)
                 .collect(Collectors.toList());
         this.setSectoresPersonalizacionDisponibles(listaFiltrada);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ProductoBase{" +
+                "ID=" + ID +
+                ", nombre='" + nombre + '\'' +
+                ", foto='" + foto + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", estadoProducto=" + estadoProducto +
+                ", precio_base=" + precio_base +
+                ", tiempo_fabricacion=" + tiempo_fabricacion +
+                ", categoria=" + categoria +
+                ", sectoresPersonalizacionDisponibles=" + sectoresPersonalizacionDisponibles +
+                '}';
     }
 }

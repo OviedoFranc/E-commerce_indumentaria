@@ -1,9 +1,9 @@
 package ar.utn.ecommerce.Controlador;
 
 import ar.utn.ecommerce.Repositorio.ProductoPersonalizadoRepository;
-import ar.utn.ecommerce.models.DTO.DTOVendedorPost;
-import ar.utn.ecommerce.models.Productos.ProductoPersonalizado;
-import ar.utn.ecommerce.models.Usuario.Vendedor;
+import ar.utn.ecommerce.Modelos.DTO.DTOVendedorPost;
+import ar.utn.ecommerce.Modelos.Productos.ProductoPersonalizado;
+import ar.utn.ecommerce.Modelos.Usuario.Vendedor;
 import ar.utn.ecommerce.Repositorio.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,17 +29,18 @@ public class VendedorController {
         public List<Vendedor> vendedoresPosibles(){
             return repositorioVendedor.findAll();
         }
-    @GetMapping(path = {"/{vendedor}/productoPersonalizado"} )
-        public List<ProductoPersonalizado> productosPersonalizadosDeVendedor(@PathVariable Integer vendedor){
 
-        Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(vendedor);
+        @GetMapping(path = {"/{vendedor}/productoPersonalizado"} )
+        public List<ProductoPersonalizado> productosPersonalizadosDeVendedor(@PathVariable Integer vendedorId){
+
+        Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(vendedorId);
         return repositorioProductoPersonalizado.findByCreador(vendedorTraido.get().getNombre());
 
         }
 
-        @GetMapping(path = {"/vendedor/{Id}"} )
-        public ResponseEntity<Vendedor> obtenerVendedor(@PathVariable Integer Id){
-            Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(Id) ;
+        @GetMapping(path = {"/vendedor/{vendedorId}"} )
+        public ResponseEntity<Vendedor> obtenerVendedor(@PathVariable Integer vendedorId){
+            Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(vendedorId) ;
             if (vendedorTraido.isEmpty()){
                 return ResponseEntity.notFound().build();
             }
@@ -54,14 +55,14 @@ public class VendedorController {
 
         }
 
-    @DeleteMapping(path = {"/vendedor/{Id}"} )
-    public void eliminarVendedorYproductosPersonalizados(@PathVariable Integer Id){
-            Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(Id);
-            if(!vendedorTraido.isEmpty()) {
-                vendedorTraido.get().darDeBaja();
-                repositorioVendedor.save(vendedorTraido.get());
+        @DeleteMapping(path = {"/vendedor/{vendedorId}"} )
+        public void eliminarVendedorYproductosPersonalizados(@PathVariable Integer vendedorId){
+                Optional<Vendedor> vendedorTraido = repositorioVendedor.findById(vendedorId);
+                if(!vendedorTraido.isEmpty()) {
+                    vendedorTraido.get().darDeBaja();
+                    repositorioVendedor.save(vendedorTraido.get());
+                }
+                else throw new IllegalStateException("Error vendedor no existe");
             }
-            else throw new IllegalStateException("Error vendedor no existe");
-        }
 
 }

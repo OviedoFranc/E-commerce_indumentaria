@@ -1,4 +1,4 @@
-package ar.utn.ecommerce.models.Usuario;
+package ar.utn.ecommerce.Modelos.Usuario;
 
 import lombok.Getter;
 
@@ -18,12 +18,13 @@ public class Usuario {
     @Column( name = "correoElectronico")
     private String email;
 
-    @Column( name = "Password")             // Generar con encriptacion de 64b
+    @Column( name = "Password")
     private String Password;
 
     @Enumerated(EnumType.STRING)
     @Column( name = "tipoDeCuenta")
     private TipoCuenta tipoDeCuenta;
+
 
     public Usuario(String nombre, String email, String password, TipoCuenta tipoDeCuenta) {
         this.Nombre = nombre;
