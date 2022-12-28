@@ -3,6 +3,7 @@ import ar.utn.ecommerce.Modelos.DTO.*;
 import ar.utn.ecommerce.Modelos.Usuario.*;
 import ar.utn.ecommerce.Repositorio.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 
 @RestController
+@CrossOrigin
 public class LoginController {
 
     @Autowired
